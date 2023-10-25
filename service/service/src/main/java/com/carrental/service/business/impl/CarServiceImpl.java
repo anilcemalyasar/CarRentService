@@ -1,6 +1,7 @@
 package com.carrental.service.business.impl;
 
 import com.carrental.service.business.CarService;
+import com.carrental.service.exceptions.CarNotFoundException;
 import com.carrental.service.model.entity.Car;
 import com.carrental.service.model.vm.UpdateCarColorVm;
 import com.carrental.service.repository.CarRepository;
@@ -78,6 +79,16 @@ public class CarServiceImpl implements CarService {
         carRepository.save(car);
         return car.getId() + " numaralı aracın rengi "
                 + prevColor + " renginden " + carVm.getNewColor() + " rengine dönüştürüldü";
+    }
+
+    @Override
+    public String updateCarRentalFee(Long carId, double newRentalFee) {
+        Car car = carRepository.findById(carId)
+                .orElseThrow(CarNotFoundException::new);
+
+        car.setRentalFee(newRentalFee);
+        return carId + " numaralı arabanın kiralama ücreti "
+                + newRentalFee + " TL olarak güncellendi!";
     }
 
     @Override

@@ -16,5 +16,6 @@ public interface CarService {
     String uploadImageToCar(Long carId, MultipartFile file) throws IOException;
     byte[] downloadCarImage(Long carId);
     String updateCarColor(UpdateCarColorVm carVm);
+    String updateCarRentalFee(Long carId, double newRentalFee);
     String updateMaxSpeed(Long carId, int newSpeed);
 }

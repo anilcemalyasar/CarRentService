@@ -65,4 +65,16 @@ public class CarController {
                 .body(carService.updateMaxSpeed(carId, newSpeed));
     }
 
+    @PutMapping("/{carId}/rentalFee/update")
+    public ResponseEntity<String> updateRentalFee(@PathVariable("carId") Long carId,
+                                                  @RequestParam(required = true) double newRentalFee) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(carService.updateCarRentalFee(carId, newRentalFee));
+    }
+
+    @DeleteMapping("/{carId}")
+    public String deleteById(@PathVariable("carId") Long carId) {
+        return carService.deleteById(carId);
+    }
+
 }

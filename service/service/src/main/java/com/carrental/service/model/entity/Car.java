@@ -33,6 +33,8 @@ public class Car {
     @Lob
     @Column(name = "car_image", length = 1000)
     private byte[] carImage;
+    @Column
+    private double rentalFee;
 
 
 }
