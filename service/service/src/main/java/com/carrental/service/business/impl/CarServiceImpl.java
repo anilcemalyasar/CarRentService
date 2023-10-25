@@ -2,6 +2,7 @@ package com.carrental.service.business.impl;
 
 import com.carrental.service.business.CarService;
 import com.carrental.service.model.entity.Car;
+import com.carrental.service.model.vm.UpdateCarColorVm;
 import com.carrental.service.repository.CarRepository;
 import com.carrental.service.util.ImageUtils;
 import jakarta.transaction.Transactional;
@@ -69,6 +70,28 @@ public class CarServiceImpl implements CarService {
         return images;
     }
 
+    @Override
+    public String updateCarColor(UpdateCarColorVm carVm) {
+        Car car = carRepository.findById(carVm.getId()).get();
+        String prevColor = car.getColor();
+        car.setColor(carVm.getNewColor());
+        carRepository.save(car);
+        return car.getId() + " numaralı aracın rengi "
+                + prevColor + " renginden " + carVm.getNewColor() + " rengine dönüştürüldü";
+    }
+
+    @Override
+    public String updateMaxSpeed(Long carId, int newSpeed) {
+        if(!exists(carId)) {
+            logger.error(carId + " ID numarasına sahip bir araç bulunmamaktadır!");
+        }
+        Car car = carRepository.findById(carId).get();
+        int prevMaxSpeed = car.getMaxSpeed();
+        car.setMaxSpeed(newSpeed);
+        carRepository.save(car);
+        return car.getId() + " numaralı aracın maksimum hızı "
+                + prevMaxSpeed + " hızından " + newSpeed + " hızına dönüştürüldü";
+    }
 
     public boolean exists(Long id) {
         Optional<Car> optional = carRepository.findById(id);
