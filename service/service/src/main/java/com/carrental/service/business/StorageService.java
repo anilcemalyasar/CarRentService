@@ -3,6 +3,7 @@ package com.carrental.service.business;
 import com.carrental.service.model.entity.ImageData;
 import com.carrental.service.repository.StorageRepository;
 import com.carrental.service.util.ImageUtils;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,19 +25,18 @@ public class StorageService {
         ImageData imageData = storageRepository.save(ImageData.builder()
                 .name(file.getOriginalFilename())
                 .type(file.getContentType())
-                .imageData(ImageUtils.compressImage(file.getBytes())).build()
-        );
-
+                .imageData(ImageUtils.compressImage(file.getBytes())).build());
         if (imageData != null) {
-            return "File uploaded successfully : " + file.getOriginalFilename();
+            return "file uploaded successfully : " + file.getOriginalFilename();
         }
         return null;
 
     }
 
-    public byte[] downloadImage(String fileName) {
+    @Transactional
+    public byte[] downloadImage(String fileName){
         Optional<ImageData> dbImageData = storageRepository.findByName(fileName);
-        byte[] images = ImageUtils.decompressImage(dbImageData.get().getImageData());
+        byte[] images=ImageUtils.decompressImage(dbImageData.get().getImageData());
         return images;
     }
 }

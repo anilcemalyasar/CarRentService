@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 @Data
 @NoArgsConstructor
@@ -22,7 +23,7 @@ public class ImageData {
     private String type;
 
     @Lob
-    @Column(name = "imagedata", length = 1000)
+    @Type(type = "text")
     private byte[] imageData;
 
 
