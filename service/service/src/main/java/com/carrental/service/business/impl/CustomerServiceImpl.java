@@ -2,8 +2,10 @@ package com.carrental.service.business.impl;
 
 import com.carrental.service.business.CustomerService;
 import com.carrental.service.exceptions.CustomerNotFoundException;
+import com.carrental.service.model.dto.CustomerDto;
 import com.carrental.service.model.entity.Customer;
 import com.carrental.service.repository.CustomerRepository;
+import com.carrental.service.util.mapper.ModelMapperManager;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,39 +14,48 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class CustomerServiceImpl implements CustomerService {
 
     private CustomerRepository customerRepository;
+    private ModelMapperManager modelMapper;
     private static final Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
 
     @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository,
+                               ModelMapperManager modelMapper) {
         this.customerRepository = customerRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
-    public List<Customer> getAllCustomers() {
-        return customerRepository.findAll();
+    public List<CustomerDto> getAllCustomers() {
+        List<Customer> customers = customerRepository.findAll();
+        return customers.stream()
+                .map(customer -> modelMapper.forResponse().map(customer, CustomerDto.class))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Customer getCustomerById(Long id) {
+    public CustomerDto getCustomerById(Long id) {
         if(!existsById(id)) {
-            logger.error(id + " numaralı bir müşteri bulunmamaktadır!");
-            return null;
+            String message = id + " numaralı bir müşteri bulunmamaktadır!";
+            logger.error(message);
+            throw new CustomerNotFoundException(message);
         }
-        return customerRepository.findById(id).get();
+        Customer customer = customerRepository.findById(id).get();
+        return modelMapper.forResponse().map(customer, CustomerDto.class);
     }
 
     @Override
-    public String addNewCustomer(Customer customer) {
+    public String addNewCustomer(CustomerDto customerDto) {
+        Customer customer = modelMapper.forRequest().map(customerDto, Customer.class);
         customerRepository.save(customer);
         return customer.getId() + " ID numaralı müşteri sisteme eklendi!";
     }
-
     @Override
     public String deleteById(Long id) {
         if(!existsById(id)) {
@@ -53,6 +64,20 @@ public class CustomerServiceImpl implements CustomerService {
         }
         customerRepository.deleteById(id);
         return id + " numaralı müşteri sistemden silindi!";
+    }
+
+    @Override
+    public String deleteByFirstName(String firstName) {
+        Optional<Customer> optional = customerRepository.findByFirstNameIgnoreCase(firstName);
+        if(optional.isEmpty()) {
+            String errorMessage = firstName + " adlı bir müşteri bulunmamaktadır!";
+            logger.error(errorMessage);
+            throw new CustomerNotFoundException(errorMessage);
+        }
+        Customer customer = optional.get();
+        customerRepository.delete(customer);
+        return customer.getFirstName() + " " + customer.getLastName()
+                + " adlı müşteri sistemden silindi!";
     }
 
     @Override
