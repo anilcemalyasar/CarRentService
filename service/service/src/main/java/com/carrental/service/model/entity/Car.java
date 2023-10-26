@@ -36,5 +36,8 @@ public class Car {
     @Column
     private double rentalFee;
 
+    @Column
+    private boolean isAvailable = true;
+
 
 }
