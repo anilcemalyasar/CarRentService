@@ -4,10 +4,7 @@ import com.carrental.service.business.OrderService;
 import com.carrental.service.model.dto.OrderDto;
 import com.carrental.service.model.entity.Order;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,4 +26,22 @@ public class OrderController {
     public Order getOrderById(@PathVariable("orderId") Long orderId) {
         return orderService.getOrderById(orderId);
     }
+
+    @PostMapping("")
+    public String addNewOrder(@RequestBody OrderDto orderDto) {
+        return orderService.addNewOrder(orderDto);
+    }
+
+    @DeleteMapping("/{orderId}")
+    public String deleteById(@PathVariable("orderId") Long orderId) {
+        return orderService.deleteById(orderId);
+    }
+
+    @GetMapping("/customers/{customerId}")
+    public List<Order> getOrdersByCustomerId(@PathVariable("customerId") Long customerId) {
+        return orderService.getOrdersByCustomerId(customerId);
+    }
+
+
+
 }

@@ -11,7 +11,7 @@ public interface OrderService {
     Order getOrderById(Long orderId);
     List<Order> getOrdersByCustomerId(Long customerId);
     List<Order> getOrdersByCarId(Long carId);
-    String addNewOrder(Order order);
+    String addNewOrder(OrderDto orderDto);
     String deleteById(Long orderId);
     boolean existsById(Long orderId);
 
