@@ -1,5 +1,8 @@
 package com.carrental.service.model.dto;
 
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,10 +12,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CarDto {
 
+    @NotBlank
     private String type;
+    @NotBlank
     private String model;
+    @NotBlank
     private String color;
+    @Min(2000)
     private int year;
-    private int max_speed;
+    @Min(120)
+    private int maxSpeed;
+    @Min(300)
+    private double rentalFee;
 }
 

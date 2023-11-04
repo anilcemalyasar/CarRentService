@@ -2,6 +2,7 @@ package com.carrental.service.business.impl;
 
 import com.carrental.service.business.CarService;
 import com.carrental.service.exceptions.CarNotFoundException;
+import com.carrental.service.model.dto.CarDto;
 import com.carrental.service.model.entity.Car;
 import com.carrental.service.model.vm.UpdateCarColorVm;
 import com.carrental.service.repository.CarRepository;
@@ -21,7 +22,6 @@ import java.util.Optional;
 @Service
 @Transactional
 public class CarServiceImpl implements CarService {
-
     private CarRepository carRepository;
     private static final Logger logger = LoggerFactory.getLogger(CarServiceImpl.class);
 
@@ -46,7 +46,16 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public String addNewCar(Car car) {
+    public String addNewCar(CarDto carDto) {
+        Car car = Car.builder()
+                .type(carDto.getType())
+                .model(carDto.getModel())
+                .color(carDto.getColor())
+                .year(carDto.getYear())
+                .maxSpeed(carDto.getMaxSpeed())
+                .rentalFee(carDto.getRentalFee())
+                .build();
+        // car.setIsAvailable(true);
         carRepository.save(car);
         return car.getModel() + " sisteme eklendi!";
     }

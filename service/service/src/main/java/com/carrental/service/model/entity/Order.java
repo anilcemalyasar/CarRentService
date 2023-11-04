@@ -1,5 +1,6 @@
 package com.carrental.service.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,9 +23,11 @@ public class Order {
     private Long id;
 
     @Column(name = "start_time", nullable = false)
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date startTime;
 
     @Column(name = "end_time", nullable = false)
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date endTime;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)

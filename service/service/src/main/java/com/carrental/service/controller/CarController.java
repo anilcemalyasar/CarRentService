@@ -1,6 +1,7 @@
 package com.carrental.service.controller;
 
 import com.carrental.service.business.CarService;
+import com.carrental.service.model.dto.CarDto;
 import com.carrental.service.model.entity.Car;
 import com.carrental.service.model.vm.UpdateCarColorVm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +36,8 @@ public class CarController {
     }
 
     @PostMapping("")
-    public String addNewCar(@RequestBody Car car) {
-        return carService.addNewCar(car);
+    public String addNewCar(@RequestBody CarDto carDto) {
+        return carService.addNewCar(carDto);
     }
 
     @PostMapping("/{carId}/image")

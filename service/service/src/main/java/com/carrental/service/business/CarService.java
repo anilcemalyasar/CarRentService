@@ -1,5 +1,6 @@
 package com.carrental.service.business;
 
+import com.carrental.service.model.dto.CarDto;
 import com.carrental.service.model.entity.Car;
 import com.carrental.service.model.vm.UpdateCarColorVm;
 
@@ -11,7 +12,7 @@ import java.util.List;
 public interface CarService {
     List<Car> getAllCars();
     Car getCarById(Long id);
-    String addNewCar(Car car);
+    String addNewCar(CarDto carDto);
     String deleteById(Long id);
     String uploadImageToCar(Long carId, MultipartFile file) throws IOException;
     byte[] downloadCarImage(Long carId);

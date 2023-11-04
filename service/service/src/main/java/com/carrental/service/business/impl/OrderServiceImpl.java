@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -42,6 +43,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Cacheable(value = "orders")
     public List<OrderDto> getAllOrders() {
         List<Order> orders = orderRepository.findAll();
         return orders.stream()
@@ -50,6 +52,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Cacheable(value = "orders", key = "#orderId")
     public Order getOrderById(Long orderId) {
         if(!existsById(orderId)) {
             String errorMessage = orderId + " numaralı bir kiralama işlemi bulunmamaktadır!";
@@ -105,11 +108,20 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public String deleteById(Long orderId) {
         if(!existsById(orderId)){
             String errorMessage = orderId + " numaralı bir kiralama işlemi bulunmamaktadır!";
             logger.error(errorMessage);
         }
+
+        Order order = orderRepository.findById(orderId).get();
+        // After cancelling give rental fee back to customer
+        Customer customer = order.getCustomer();
+        Car car = order.getCar();
+        customer.setWallet(customer.getWallet() + car.getRentalFee());
+
+        customerRepository.save(customer);
         orderRepository.deleteById(orderId);
         return orderId + " numaralı kiralama işlemi sistemden silindi!";
     }
