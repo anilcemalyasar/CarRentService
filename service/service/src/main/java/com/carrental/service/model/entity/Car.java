@@ -3,6 +3,8 @@ package com.carrental.service.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -38,6 +40,9 @@ public class Car {
 
     @Column
     private boolean isAvailable;
+
+    @ManyToMany(mappedBy = "cars")
+    private List<Company> companies;
 
 
 }

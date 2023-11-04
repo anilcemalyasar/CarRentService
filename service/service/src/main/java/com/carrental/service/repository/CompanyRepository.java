@@ -7,12 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
 @Repository
-public interface CarRepository extends JpaRepository<Car, Long> {
-    Car findByModel(String model);
-    Car findByTypeAndModel(String type, String model);
-
-    List<Car> findByCompanies(Company company);
-
+public interface CompanyRepository extends JpaRepository<Company, Long> {
 }

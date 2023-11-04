@@ -13,5 +13,5 @@ public interface CustomerService {
     String deleteByFirstName(String firstName);
     String updateWalletById(Long id, double deposit);
     String updateMailAddress(Long id, String newAddress);
-    boolean existsById(Long id);
+    boolean existsById(Long customerId);
 }
