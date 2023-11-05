@@ -31,6 +31,7 @@ public class CompanyServiceImpl implements CompanyService {
         this.carRepository = carRepository;
     }
 
+    // CompanyDto dönmesi lazım burayı ayarla!!!
     @Override
     public List<Company> getAllCompanies() {
         return companyRepository.findAll();
@@ -69,15 +70,30 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public String purchaseCarToCompany(PurchaseCarToCompanyVm carToCompanyVm) {
         List<Car> cars = new ArrayList<Car>();
+        double totalAmount = 0;
         for (Long carId: carToCompanyVm.getCars()) {
             Car car = carRepository.findById(carId)
                     .orElseThrow(() -> new CarNotFoundException(carId + " ID li bir araba bulunmamaktadır!"));
             cars.add(car);
+            totalAmount += car.getSalePrice();
         }
 
         Company company = companyRepository.findById(carToCompanyVm.getCompanyId())
                 .orElseThrow(() -> new CustomerNotFoundException("Bu ID numarasına sahip bir şirket bulunmamaktadır!"));
-        company.setCars(cars);
+
+        if(company.getBudget() < totalAmount) {
+            double difference = totalAmount - company.getBudget();
+            throw new CustomerNotFoundException("Şirketin bütçesi bu arabaları satın almak için yetersiz! "
+                    + difference + " TL bütçe eklentisi gerekmektedir!");
+        }
+        // Updating budget of company after purchasing cars
+        company.setBudget(company.getBudget() - totalAmount);
+        List<Car> prevCars = company.getCars();
+        for (Car newCar: cars) {
+            prevCars.add(newCar);
+        }
+
+        company.setCars(prevCars);
         companyRepository.save(company);
         return company.getId() + " ID li şirkete yeni arabalar alındı!";
     }

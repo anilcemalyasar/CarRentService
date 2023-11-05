@@ -31,7 +31,7 @@ public class Company {
 
     private double budget;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "company_car",
             joinColumns = @JoinColumn(name = "company_id"),

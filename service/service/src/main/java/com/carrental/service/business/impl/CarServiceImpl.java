@@ -54,6 +54,7 @@ public class CarServiceImpl implements CarService {
                 .year(carDto.getYear())
                 .maxSpeed(carDto.getMaxSpeed())
                 .rentalFee(carDto.getRentalFee())
+                .salePrice(carDto.getSalePrice())
                 .build();
         // car.setIsAvailable(true);
         carRepository.save(car);

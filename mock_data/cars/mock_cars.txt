@@ -1,0 +1,19 @@
+{
+    "type" : "Porsche",
+    "model": "911 GT3 RS",
+    "color": "black",
+    "year": 2023,
+    "maxSpeed": 300,
+    "rentalFee": 1000,
+    "salePrice": 200000
+}
+
+{
+    "type" : Volkswagen
+    "model": "Taigo"
+    "color": "dark blue",
+    "year": 2022,
+    "maxSpeed": 220,
+    "rentalFee": 500,
+    "salePrice": 20000
+}

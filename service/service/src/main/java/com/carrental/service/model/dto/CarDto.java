@@ -24,5 +24,8 @@ public class CarDto {
     private int maxSpeed;
     @Min(300)
     private double rentalFee;
+
+    @Min(10000)
+    private double salePrice;
 }
 

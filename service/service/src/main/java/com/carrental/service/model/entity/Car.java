@@ -1,5 +1,6 @@
 package com.carrental.service.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -39,9 +40,13 @@ public class Car {
     private double rentalFee;
 
     @Column
+    private double salePrice;
+
+    @Column
     private boolean isAvailable;
 
     @ManyToMany(mappedBy = "cars")
+    @JsonIgnore
     private List<Company> companies;
 
 
