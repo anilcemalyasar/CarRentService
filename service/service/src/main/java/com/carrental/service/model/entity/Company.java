@@ -39,6 +39,7 @@ public class Company {
     )
     private List<Car> cars;
 
-
+    @OneToOne(mappedBy = "company")
+    private Order order;
 
 }

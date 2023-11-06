@@ -5,9 +5,11 @@ import com.carrental.service.exceptions.CarNotFoundException;
 import com.carrental.service.exceptions.CustomerNotFoundException;
 import com.carrental.service.model.dto.OrderDto;
 import com.carrental.service.model.entity.Car;
+import com.carrental.service.model.entity.Company;
 import com.carrental.service.model.entity.Customer;
 import com.carrental.service.model.entity.Order;
 import com.carrental.service.repository.CarRepository;
+import com.carrental.service.repository.CompanyRepository;
 import com.carrental.service.repository.CustomerRepository;
 import com.carrental.service.repository.OrderRepository;
 import com.carrental.service.util.mapper.ModelMapperManager;
@@ -31,15 +33,19 @@ public class OrderServiceImpl implements OrderService {
     private CustomerRepository customerRepository;
     private CarRepository carRepository;
     private ModelMapperManager modelMapperManager;
+    private final CompanyRepository companyRepository;
     private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository, ModelMapperManager modelMapperManager,
-                            CustomerRepository customerRepository, CarRepository carRepository) {
+                            CustomerRepository customerRepository, CarRepository carRepository,
+                            CompanyRepository companyRepository
+    ) {
         this.orderRepository = orderRepository;
         this.modelMapperManager = modelMapperManager;
         this.customerRepository = customerRepository;
         this.carRepository = carRepository;
+        this.companyRepository = companyRepository;
     }
 
     @Override
@@ -98,11 +104,22 @@ public class OrderServiceImpl implements OrderService {
         if(!(customer.getWallet() > car.getRentalFee())) {
             throw new CustomerNotFoundException("Müşterinin bütçesi bu arabayı kiralamak için yetersiz");
         }
+
+        if(!(companyRepository.isCarInCompany(orderDto.getCompanyId(), car.getId()))) {
+            logger.error("Bu şirkette böyle bir araç bulunmamaktadır!");
+            throw new CustomerNotFoundException("Bu şirkette böyle bir araç bulunmuyor!");
+        }
+
+        Company company = companyRepository.findById(orderDto.getCompanyId())
+                .orElseThrow(() -> new CustomerNotFoundException("Bu ID li şirket bulunmamaktadır!"));
+
         Order order = modelMapperManager.forRequest().map(orderDto, Order.class);
         customer.setWallet(customer.getWallet() - car.getRentalFee());
         car.setAvailable(false);
+        company.setBudget(company.getBudget() + car.getRentalFee());
         carRepository.save(car);
         customerRepository.save(customer);
+        companyRepository.save(company);
         orderRepository.save(order);
         return order.getId() + " numaralı kiralama işlemi sisteme eklendi!";
     }

@@ -20,6 +20,8 @@ public class OrderDto {
     @NotNull
     private Long carId;
     @NotNull
+    private Long companyId;
+    @NotNull
     private Long customerId;
     @NotBlank
     @JsonFormat(pattern = "dd-MM-yyyy")
