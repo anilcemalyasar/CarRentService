@@ -2,6 +2,7 @@ package com.carrental.service.controller;
 
 import com.carrental.service.business.CompanyService;
 import com.carrental.service.model.dto.CarDto;
+import com.carrental.service.model.dto.CompanyDto;
 import com.carrental.service.model.entity.Car;
 import com.carrental.service.model.entity.Company;
 import com.carrental.service.model.vm.PurchaseCarToCompanyVm;
@@ -21,12 +22,12 @@ public class CompanyController {
     }
 
     @GetMapping("")
-    public List<Company> getAllCompanies() {
+    public List<CompanyDto> getAllCompanies() {
         return companyService.getAllCompanies();
     }
 
     @GetMapping("/{companyId}")
-    public Company getCompanyById(@PathVariable("companyId") Long companyId) {
+    public CompanyDto getCompanyById(@PathVariable("companyId") Long companyId) {
         return companyService.getCompanyById(companyId);
     }
 

@@ -4,6 +4,7 @@ import com.carrental.service.business.CompanyService;
 import com.carrental.service.exceptions.CarNotFoundException;
 import com.carrental.service.exceptions.CustomerNotFoundException;
 import com.carrental.service.model.dto.CarDto;
+import com.carrental.service.model.dto.CompanyDto;
 import com.carrental.service.model.entity.Car;
 import com.carrental.service.model.entity.Company;
 import com.carrental.service.model.vm.PurchaseCarToCompanyVm;
@@ -33,14 +34,43 @@ public class CompanyServiceImpl implements CompanyService {
 
     // CompanyDto dönmesi lazım burayı ayarla!!!
     @Override
-    public List<Company> getAllCompanies() {
-        return companyRepository.findAll();
+    public List<CompanyDto> getAllCompanies() {
+        List<Company> companies = companyRepository.findAll();
+        List<CompanyDto> companyDtos = new ArrayList<CompanyDto>();
+        for (Company company: companies) {
+            List<CarDto> carDtos = new ArrayList<CarDto>();
+            for (Car car: company.getCars()) {
+                CarDto carDto = modelMapper.forResponse().map(car, CarDto.class);
+                carDtos.add(carDto);
+            }
+            CompanyDto companyDto = modelMapper.forRequest().map(company, CompanyDto.class);
+            companyDto.setCars(carDtos);
+            companyDtos.add(companyDto);
+        }
+        return companyDtos;
     }
 
     @Override
-    public Company getCompanyById(Long companyId) {
-        return companyRepository.findById(companyId)
+    public CompanyDto getCompanyById(Long companyId) {
+        Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new CustomerNotFoundException(companyId + " ID li bir şirket bulunamadı"));
+        List<CarDto> cars = new ArrayList<>();
+        for (Car car: company.getCars()) {
+            CarDto carDto = CarDto.builder()
+                    .type(car.getType())
+                    .model(car.getModel())
+                    .color(car.getColor())
+                    .year(car.getYear())
+                    .maxSpeed(car.getMaxSpeed())
+                    .rentalFee(car.getRentalFee())
+                    .salePrice(car.getSalePrice())
+                    .build();
+
+            cars.add(carDto);
+        }
+        CompanyDto companyDto = modelMapper.forRequest().map(company, CompanyDto.class);
+        companyDto.setCars(cars);
+        return companyDto;
     }
 
     @Override

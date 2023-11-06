@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,5 +21,7 @@ public class CompanyDto {
     private String city;
     private String district;
     private String address;
+
+    private List<CarDto> cars;
 
 }
