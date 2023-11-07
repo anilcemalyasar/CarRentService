@@ -3,6 +3,8 @@ package com.carrental.service.business.impl;
 import com.carrental.service.business.OrderService;
 import com.carrental.service.exceptions.CarNotFoundException;
 import com.carrental.service.exceptions.CustomerNotFoundException;
+import com.carrental.service.model.dto.CarDto;
+import com.carrental.service.model.dto.CompanyDto;
 import com.carrental.service.model.dto.OrderDto;
 import com.carrental.service.model.entity.Car;
 import com.carrental.service.model.entity.Company;
@@ -79,11 +81,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getOrdersByCarId(Long carId) {
+    public List<OrderDto> getOrdersByCarId(Long carId) {
         return orderRepository.findAll()
                 .stream()
                 .filter(order -> order.getCar().getId() == carId)
-                .collect(Collectors.toList());
+                .map(this::mapOrderToOrderDto)
+                .toList();
     }
 
     @Override
@@ -155,6 +158,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto mapOrderToOrderDto(Order order) {
+
         return OrderDto.builder()
                 .carId(order.getCar().getId())
                 .companyId(order.getCompany().getId())
@@ -163,4 +167,6 @@ public class OrderServiceImpl implements OrderService {
                 .endTime(order.getEndTime())
                 .build();
     }
+
+
 }

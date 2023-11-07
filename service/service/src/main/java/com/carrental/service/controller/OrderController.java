@@ -4,6 +4,7 @@ import com.carrental.service.business.OrderService;
 import com.carrental.service.model.dto.OrderDto;
 import com.carrental.service.model.entity.Order;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,6 +41,11 @@ public class OrderController {
     @GetMapping("/customers/{customerId}")
     public List<OrderDto> getOrdersByCustomerId(@PathVariable("customerId") Long customerId) {
         return orderService.getOrdersByCustomerId(customerId);
+    }
+
+    @GetMapping("/cars/{carId}")
+    public ResponseEntity<List<OrderDto>> getOrdersByCarId(@PathVariable("carId") Long carId) {
+        return ResponseEntity.ok(orderService.getOrdersByCarId(carId));
     }
 
 

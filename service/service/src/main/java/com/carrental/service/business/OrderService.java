@@ -10,7 +10,7 @@ public interface OrderService {
     List<OrderDto> getAllOrders();
     OrderDto getOrderById(Long orderId);
     List<OrderDto> getOrdersByCustomerId(Long customerId);
-    List<Order> getOrdersByCarId(Long carId);
+    List<OrderDto> getOrdersByCarId(Long carId);
     String addNewOrder(OrderDto orderDto);
     String deleteById(Long orderId);
     boolean existsById(Long orderId);
