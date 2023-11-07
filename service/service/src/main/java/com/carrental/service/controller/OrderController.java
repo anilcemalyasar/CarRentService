@@ -23,7 +23,7 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public Order getOrderById(@PathVariable("orderId") Long orderId) {
+    public OrderDto getOrderById(@PathVariable("orderId") Long orderId) {
         return orderService.getOrderById(orderId);
     }
 
@@ -38,7 +38,7 @@ public class OrderController {
     }
 
     @GetMapping("/customers/{customerId}")
-    public List<Order> getOrdersByCustomerId(@PathVariable("customerId") Long customerId) {
+    public List<OrderDto> getOrdersByCustomerId(@PathVariable("customerId") Long customerId) {
         return orderService.getOrdersByCustomerId(customerId);
     }
 

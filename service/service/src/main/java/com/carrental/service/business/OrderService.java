@@ -8,11 +8,13 @@ import java.util.List;
 
 public interface OrderService {
     List<OrderDto> getAllOrders();
-    Order getOrderById(Long orderId);
-    List<Order> getOrdersByCustomerId(Long customerId);
+    OrderDto getOrderById(Long orderId);
+    List<OrderDto> getOrdersByCustomerId(Long customerId);
     List<Order> getOrdersByCarId(Long carId);
     String addNewOrder(OrderDto orderDto);
     String deleteById(Long orderId);
     boolean existsById(Long orderId);
+
+    OrderDto mapOrderToOrderDto(Order order);
 
 }

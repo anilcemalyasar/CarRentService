@@ -38,7 +38,7 @@ public class Order {
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "company_id", referencedColumnName = "id")
     private Company company;
 

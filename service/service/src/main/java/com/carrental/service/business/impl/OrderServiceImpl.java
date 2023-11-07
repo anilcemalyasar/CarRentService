@@ -48,6 +48,8 @@ public class OrderServiceImpl implements OrderService {
         this.companyRepository = companyRepository;
     }
 
+
+    // Company ve Customer ID yerine bunların DTO su verilsin orderDto içerisinde
     @Override
     @Cacheable(value = "orders")
     public List<OrderDto> getAllOrders() {
@@ -59,21 +61,21 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Cacheable(value = "orders", key = "#orderId")
-    public Order getOrderById(Long orderId) {
-        if(!existsById(orderId)) {
-            String errorMessage = orderId + " numaralı bir kiralama işlemi bulunmamaktadır!";
-            logger.error(errorMessage);
-        }
-        Order order = orderRepository.findById(orderId).get();
-        return order;
+    public OrderDto getOrderById(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new CustomerNotFoundException(orderId + " numaralı bir sipariş bulunmamaktadır!"));
+        return mapOrderToOrderDto(order);
     }
 
     @Override
-    public List<Order> getOrdersByCustomerId(Long customerId) {
-        return orderRepository.findAll()
+    public List<OrderDto> getOrdersByCustomerId(Long customerId) {
+        List<Order> orders =  orderRepository.findAll()
                 .stream()
                 .filter(order -> order.getCustomer().getId() == customerId)
-                .collect(Collectors.toList());
+                .toList();
+        return orders.stream()
+                .map(this::mapOrderToOrderDto)
+                .toList();
     }
 
     @Override
@@ -136,8 +138,10 @@ public class OrderServiceImpl implements OrderService {
         // After cancelling give rental fee back to customer
         Customer customer = order.getCustomer();
         Car car = order.getCar();
+        Company company = order.getCompany();
         customer.setWallet(customer.getWallet() + car.getRentalFee());
-
+        company.setBudget(company.getBudget() - car.getRentalFee());
+        companyRepository.save(company);
         customerRepository.save(customer);
         orderRepository.deleteById(orderId);
         return orderId + " numaralı kiralama işlemi sistemden silindi!";
@@ -147,5 +151,16 @@ public class OrderServiceImpl implements OrderService {
     public boolean existsById(Long orderId) {
         Optional<Order> optional = orderRepository.findById(orderId);
         return optional.isPresent();
+    }
+
+    @Override
+    public OrderDto mapOrderToOrderDto(Order order) {
+        return OrderDto.builder()
+                .carId(order.getCar().getId())
+                .companyId(order.getCompany().getId())
+                .customerId(order.getCustomer().getId())
+                .startTime(order.getStartTime())
+                .endTime(order.getEndTime())
+                .build();
     }
 }
