@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface CarService {
-    List<Car> getAllCars();
+    List<CarDto> getAllCars();
     Car getCarById(Long id);
     String addNewCar(CarDto carDto);
     String deleteById(Long id);
@@ -19,4 +19,6 @@ public interface CarService {
     String updateCarColor(UpdateCarColorVm carVm);
     String updateCarRentalFee(Long carId, double newRentalFee);
     String updateMaxSpeed(Long carId, int newSpeed);
+
+    CarDto mapCarToCarDto(Car car);
 }

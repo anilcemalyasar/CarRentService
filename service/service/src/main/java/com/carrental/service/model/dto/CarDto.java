@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,5 +31,7 @@ public class CarDto {
 
     @Min(10000)
     private double salePrice;
+
+    private List<OrderDto> orders;
 }
 

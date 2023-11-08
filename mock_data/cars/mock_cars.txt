@@ -9,8 +9,8 @@
 }
 
 {
-    "type" : Volkswagen
-    "model": "Taigo"
+    "type" : "Volkswagen",
+    "model": "Taigo",
     "color": "dark blue",
     "year": 2022,
     "maxSpeed": 220,

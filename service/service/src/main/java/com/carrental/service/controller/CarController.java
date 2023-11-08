@@ -26,7 +26,7 @@ public class CarController {
     }
 
     @GetMapping("")
-    public List<Car> getAllCars() {
+    public List<CarDto> getAllCars() {
         return carService.getAllCars();
     }
 

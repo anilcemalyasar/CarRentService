@@ -30,7 +30,7 @@ public class Order {
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date endTime;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "car_id", referencedColumnName = "id")
     private Car car;
 
@@ -38,7 +38,7 @@ public class Order {
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "company_id", referencedColumnName = "id")
     private Company company;
 

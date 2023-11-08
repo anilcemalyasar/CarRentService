@@ -17,4 +17,5 @@ public interface CompanyService {
     List<CarDto> getRentalCarsOfCompany(Long companyId);
     String purchaseCarToCompany(PurchaseCarToCompanyVm carToCompanyVm);
 
+
 }

@@ -49,5 +49,8 @@ public class Car {
     @JsonIgnore
     private List<Company> companies;
 
+    @OneToMany(mappedBy = "car")
+    private List<Order> orders;
+
 
 }

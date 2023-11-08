@@ -3,12 +3,13 @@ package com.carrental.service.business.impl;
 import com.carrental.service.business.CarService;
 import com.carrental.service.exceptions.CarNotFoundException;
 import com.carrental.service.model.dto.CarDto;
+import com.carrental.service.model.dto.OrderDto;
 import com.carrental.service.model.entity.Car;
+import com.carrental.service.model.entity.Order;
 import com.carrental.service.model.vm.UpdateCarColorVm;
 import com.carrental.service.repository.CarRepository;
 import com.carrental.service.util.ImageUtils;
 import jakarta.transaction.Transactional;
-import lombok.extern.log4j.Log4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,10 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<Car> getAllCars() {
-        return carRepository.findAll();
+    public List<CarDto> getAllCars() {
+        return carRepository.findAll()
+                .stream().map(this::mapCarToCarDto)
+                .toList();
     }
 
     @Override
@@ -112,6 +115,32 @@ public class CarServiceImpl implements CarService {
         carRepository.save(car);
         return car.getId() + " numaralı aracın maksimum hızı "
                 + prevMaxSpeed + " hızından " + newSpeed + " hızına dönüştürüldü";
+    }
+
+    @Override
+    public CarDto mapCarToCarDto(Car car) {
+        List<Order> orders = car.getOrders();
+        List<OrderDto> orderDtos = orders.stream().map(this::mapOrderToOrderDto).toList();
+        return CarDto.builder()
+                .type(car.getType())
+                .model(car.getModel())
+                .color(car.getColor())
+                .year(car.getYear())
+                .maxSpeed(car.getMaxSpeed())
+                .rentalFee(car.getRentalFee())
+                .salePrice(car.getSalePrice())
+                .orders(orderDtos)
+                .build();
+    }
+
+    public OrderDto mapOrderToOrderDto(Order order) {
+        return OrderDto.builder()
+                .companyId(order.getCompany().getId())
+                .customerId(order.getCustomer().getId())
+                .carId(order.getCar().getId())
+                .startTime(order.getStartTime())
+                .endTime(order.getEndTime())
+                .build();
     }
 
     public boolean exists(Long id) {
